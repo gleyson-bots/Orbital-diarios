@@ -33,14 +33,15 @@
   const lineBg = $('.cinematic-lines');
   const glowA = $('.page-glow-a');
   const glowB = $('.page-glow-b');
-
   let ticking = false;
+
   const updateScrollFx = () => {
     const y = window.scrollY;
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const p = Math.min(1, Math.max(0, y / max));
     if (progress) progress.style.transform = `scaleX(${p})`;
     if (header) header.classList.toggle('scrolled', y > 20);
+
     if (!prefersReduced) {
       if (glowA) glowA.style.transform = `translate3d(0, ${Math.min(180, y * .08)}px, 0)`;
       if (glowB) glowB.style.transform = `translate3d(0, ${Math.max(-130, -y * .035)}px, 0)`;
@@ -60,8 +61,12 @@
     }
     ticking = false;
   };
+
   window.addEventListener('scroll', () => {
-    if (!ticking) { requestAnimationFrame(updateScrollFx); ticking = true; }
+    if (!ticking) {
+      requestAnimationFrame(updateScrollFx);
+      ticking = true;
+    }
   }, { passive: true });
   window.addEventListener('resize', updateScrollFx, { passive: true });
   updateScrollFx();
@@ -160,8 +165,15 @@
   const cookieOpen = $('#open-cookie-settings');
   const key = 'orbital_cookie_preference_v1';
   const showCookie = () => { if (banner) banner.hidden = false; };
-  const saveCookie = value => { try { localStorage.setItem(key, value); } catch (_) {} if (banner) banner.hidden = true; };
-  try { if (!localStorage.getItem(key)) setTimeout(showCookie, 700); } catch (_) { setTimeout(showCookie, 700); }
+  const saveCookie = value => {
+    try { localStorage.setItem(key, value); } catch (_) {}
+    if (banner) banner.hidden = true;
+  };
+  try {
+    if (!localStorage.getItem(key)) setTimeout(showCookie, 700);
+  } catch (_) {
+    setTimeout(showCookie, 700);
+  }
   cookieAccept?.addEventListener('click', () => saveCookie('acknowledged'));
   cookieEssential?.addEventListener('click', () => saveCookie('essential'));
   cookieOpen?.addEventListener('click', showCookie);
